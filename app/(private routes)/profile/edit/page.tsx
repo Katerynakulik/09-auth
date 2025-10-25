@@ -7,7 +7,7 @@ import css from "./page.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { updateMe, UpdateMeRequest } from "@/lib/api/clientApi";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import Loader from "@/components/Loader/Loader";
@@ -18,6 +18,12 @@ export default function EditProfilePage() {
 
   const [username, setUsername] = useState(user?.username || "");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.username) {
+      setUsername(user.username);
+    }
+  }, [user]);
 
   const updateProfileMutation = useMutation<
     Awaited<ReturnType<typeof updateMe>>,
@@ -90,7 +96,7 @@ export default function EditProfilePage() {
             <div className={css.usernameWrapper}>
               <label htmlFor="username">Username:</label>
               <input
-                defaultValue={user?.username}
+                defaultValue={username}
                 id="username"
                 type="text"
                 name="username"

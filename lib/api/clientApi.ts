@@ -17,39 +17,35 @@ export interface FetchNotesResponse {
   totalPages: number;
 }
 
-export async function fetchNotes(params: {
-  page?: number;
-  perPage?: number;
-  search?: string;
-  tag?: string;
-}): Promise<FetchNotesResponse> {
-  const { page = 1, perPage = 12, search = "", tag } = params;
-  const response: AxiosResponse<FetchNotesResponse> = await api.get("/notes", {
+export const fetchNotes = async (
+  search: string,
+  page: number,
+  tag?: string
+): Promise<FetchNotesResponse> => {
+  const response = await nextServer.get<FetchNotesResponse>("/notes", {
     params: {
+      search,
       page,
-      perPage,
-      search: typeof search === "string" ? search : "",
       tag,
     },
   });
-  console.log("notes", response.data);
-
-  return response.data;
-}
-
-export const createNote = async (data: NewNote): Promise<Note> => {
-  const response = await api.post<Note>("/notes", data);
   return response.data;
 };
-export async function deleteNote(id: string): Promise<Note> {
-  const response: AxiosResponse<Note> = await api.delete(`/notes/${id}`);
-  return response.data;
-}
 
-export async function fetchNoteById(id: string): Promise<Note> {
-  const response = await api.get<Note>(`/notes/${id}`);
+export const createNote = async (note: NewNote): Promise<Note> => {
+  const response = await nextServer.post<Note>("/notes", note);
   return response.data;
-}
+};
+
+export const deleteNote = async (id: string): Promise<Note> => {
+  const response = await nextServer.delete<Note>(`/notes/${id}`);
+  return response.data;
+};
+
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const response = await nextServer.get<Note>(`/notes/${id}`);
+  return response.data;
+};
 
 //----------------------------------------------------------------------------
 

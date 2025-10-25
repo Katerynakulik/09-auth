@@ -4,10 +4,10 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-import { fetchNotes } from "@/lib/api/clientApi";
 import NotesClient from "./Notes.client";
 import { NoteTag } from "@/types/note";
 import { Metadata } from "next";
+import { fetchNotes } from "@/lib/api/serverApi";
 
 type NotesPageProps = {
   params: Promise<{ slug: string[] }>;
@@ -53,7 +53,7 @@ const NotesPage = async ({ params }: NotesPageProps) => {
 
   await queryClient.prefetchQuery({
     queryKey: ["notes", search, page, allowedTag],
-    queryFn: () => fetchNotes({ search: search, page: page, tag: allowedTag }),
+    queryFn: () => fetchNotes(search, page, allowedTag),
   });
 
   return (
