@@ -29,23 +29,31 @@ export const checkSession = async (): Promise<
   return res;
 };
 
-export const fetchNotes = async (
-  search: string,
-  page: number,
-  tag?: string
-): Promise<FetchNotesResponse> => {
+export const fetchNotes = async ({
+  search,
+  page,
+  perPage,
+  tag,
+}: {
+  search: string;
+  page: number;
+  perPage?: number;
+  tag?: string;
+}): Promise<FetchNotesResponse> => {
   const cookieStore = await cookies();
 
   const response = await nextServer.get<FetchNotesResponse>("/notes", {
     params: {
       search,
       page,
+      perPage,
       tag,
     },
     headers: {
       Cookie: cookieStore.toString(),
     },
   });
+
   return response.data;
 };
 
